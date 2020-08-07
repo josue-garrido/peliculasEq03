@@ -10,65 +10,72 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.sql.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.servlet.ServletConfig;
+
 /**
  *
  * @author elvis
  */
-public class agregaru extends HttpServlet {
+public class guardarusuario extends HttpServlet {
 
-    //conexion con la base de datos
-    private Connection con; //objeto para establecer la conexion con bd
-    private Statement set; //es para poder prepara la querry (insert,alter, create, drop)
-    //toda la preparacion de la querry
-    private ResultSet rs; //el objeto para poder realizar consultas (select)
     
-    //metodo para poder realizar la inicializacion de la conexion bd 
-    
-    
-    
-    //este es el metodo para la conexion con la base de datos al momento que se inicializa el servlet
-    public void init(ServletConfig cfg) throws ServletException{
-       String URL = "jdbc:mysql:3306//localhost/cine";
-       //usuario de la bd
-       String userName = "root";
-       //usuario
-       String password = "gadejo96123";
-       try{
-           //colocar el driver de la conexion mysql,sql,firebase, con el manejador a ocupar
-           Class.forName("com.mysql.jdbc.Driver");
-           //uso de los objetos de con y set
-           con=DriverManager.getConnection(URL,userName,password);
-              //con set preparamos la sentencia
-           set = con.createStatement();
-        
-           System.out.println("Coneto con la BD");
-       }catch(Exception e){
-           System.out.println("No conecto con la BD");
-           System.out.println(e.getMessage());
-           System.out.println(e.getStackTrace());
-       } 
-    }
     
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
+            
+            String nombre,ape_pat,ape_mat,edad,correo,password;
+            nombre = request.getParameter("nombre");
+            ape_pat = request.getParameter("ape_pat");
+            ape_mat = request.getParameter("ape_mat");
+            edad = request.getParameter("edad");
+            correo = request.getParameter("correo");
+            password = request.getParameter("password");
+            
+            //instancia del usuario
+            usuario e=new usuario();
+            e.setNombre(nombre);
+            e.setApe_pat(ape_pat);
+            e.setApe_mat(ape_mat);
+            e.setEdad(edad);
+            e.setCorreo(correo);
+            e.setPassword(password);
+            
+            
+            //guarda el usuario
+            int estatus = accionesu.guardar(e);
+            if(estatus>0){
+                
+            
+            
+           
+            
+           
             /* TODO output your page here. You may use following sample code. */
             out.println("<!DOCTYPE html>");
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet agregaru</title>");            
+            out.println("<title>Guardar usuario</title>");            
             out.println("</head>");
             out.println("<body>");
-            out.println("<h1>Servlet agregaru at " + request.getContextPath() + "</h1>");
+            out.println("<h1>Dato Guardado </h1>");
             out.println("</body>");
             out.println("</html>");
+        } else{
+                
+                /* TODO output your page here. You may use following sample code. */
+            out.println("<!DOCTYPE html>");
+            out.println("<html>");
+            out.println("<head>");
+            out.println("<title>Guardar usuario</title>");            
+            out.println("</head>");
+            out.println("<body>");
+            out.println("<h1>no se guardo el dato </h1>");
+            out.println("</body>");
+            out.println("</html>");
+                }
         }
+       
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
